@@ -1,0 +1,7 @@
+# gitleaks: разрешаем синтетические данные в фикстурах, всё остальное — как обычно.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "synthetic fixtures and tests"
+paths = ['''tests/.*''']

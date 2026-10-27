@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nmaprun scanner="nmap" args="nmap -sV 10.0.0.0/24" start="1763300000">
+  <host>
+    <address addr="10.0.0.5" addrtype="ipv4"/>
+    <ports>
+      <port protocol="tcp" portid="22">
+        <state state="open"/>
+        <service name="ssh"/>
+      </port>
+      <port protocol="tcp" portid="443">
+        <state state="open"/>
+        <service name="https"/>
+      </port>
+      <port protocol="tcp" portid="8080">
+        <state state="closed"/>
+        <service name="http-proxy"/>
+      </port>
+    </ports>
+  </host>
+</nmaprun>

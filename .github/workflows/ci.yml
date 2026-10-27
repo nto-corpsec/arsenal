@@ -1,0 +1,61 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: python
+    uses: nto-corpsec/.github/.github/workflows/reusable-python-ci.yml@main
+    with:
+      coverage-threshold: 70
+
+  security:
+    name: security
+    uses: nto-corpsec/.github/.github/workflows/reusable-security.yml@main
+    with:
+      semgrep-config: p/python
+      bandit-paths: src
+
+  docs:
+    name: docs
+    uses: nto-corpsec/.github/.github/workflows/reusable-docs.yml@main
+
+  no-leak:
+    name: no-leak
+    uses: nto-corpsec/.github/.github/workflows/reusable-no-leak.yml@main
+
+  gate:
+    name: gate
+    if: always()
+    needs: [python, security, docs, no-leak]
+    runs-on: ubuntu-latest
+    env:
+      RESULT_PYTHON: ${{ needs.python.result }}
+      RESULT_SECURITY: ${{ needs.security.result }}
+      RESULT_DOCS: ${{ needs.docs.result }}
+      RESULT_NO_LEAK: ${{ needs.no-leak.result }}
+    steps:
+      - name: All gates must pass
+        run: |
+          set -euo pipefail
+          failed=0
+          echo "python: $RESULT_PYTHON"
+          [ "$RESULT_PYTHON" = "success" ] || failed=1
+          echo "security: $RESULT_SECURITY"
+          [ "$RESULT_SECURITY" = "success" ] || failed=1
+          echo "docs: $RESULT_DOCS"
+          [ "$RESULT_DOCS" = "success" ] || failed=1
+          echo "no-leak: $RESULT_NO_LEAK"
+          [ "$RESULT_NO_LEAK" = "success" ] || failed=1
+          exit "$failed"

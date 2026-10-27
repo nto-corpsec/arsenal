@@ -1,0 +1,11 @@
+* @nto-corpsec/leads
+
+/src/nto/common/ @nto-corpsec/leads
+/src/nto/cli.py @nto-corpsec/leads
+/src/nto/roles/soceng/ @nto-corpsec/soceng
+/src/nto/roles/dfir/ @nto-corpsec/dfir
+/src/nto/roles/netsec/ @nto-corpsec/netsec
+/src/nto/roles/websec/ @nto-corpsec/websec
+/src/nto/roles/osint/ @nto-corpsec/osint
+/pyproject.toml @nto-corpsec/leads
+/.github/ @nto-corpsec/leads
